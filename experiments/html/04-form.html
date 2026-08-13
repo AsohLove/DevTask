@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Create Task</title>
+  </head>
+
+  <body>
+
+    <main>
+
+      <h1>Create Task</h1>
+
+      <form
+        action="/tasks"
+        method="post"
+      >
+
+        <div>
+          <label for="title">
+            Task title
+          </label>
+
+          <input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="e.g. Learn TypeScript"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="description">
+            Description
+          </label>
+
+          <textarea
+            id="description"
+            name="description"
+            rows="5"
+            placeholder="Describe the task"
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="priority">
+            Priority
+          </label>
+
+          <select
+            id="priority"
+            name="priority"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <fieldset>
+
+          <legend>Status</legend>
+
+          <label>
+            <input
+              type="radio"
+              name="status"
+              value="todo"
+              checked
+            >
+            Todo
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="status"
+              value="in_progress"
+            >
+            In Progress
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="status"
+              value="completed"
+            >
+            Completed
+          </label>
+
+        </fieldset>
+
+        <label>
+          <input
+            type="checkbox"
+            name="urgent"
+          >
+
+          Mark as urgent
+        </label>
+
+        <button type="submit">
+          Create Task
+        </button>
+
+      </form>
+
+    </main>
+
+  </body>
+</html>
