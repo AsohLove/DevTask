@@ -1,3 +1,7 @@
+/* ================================
+   Global Styles
+   ================================ */
+
 * {
   box-sizing: border-box;
 }
@@ -153,6 +157,7 @@ body {
    ================================ */
 
 .task-card {
+  position: relative;
 
   padding: 20px;
 
@@ -169,7 +174,27 @@ body {
 
 
 /* ================================
-   Buttons
+   Task Status
+   ================================ */
+
+.task-status {
+  position: absolute;
+
+  top: 10px;
+  right: 10px;
+
+  padding: 4px 8px;
+
+  border-radius: 4px;
+
+  font-size: 12px;
+
+  background-color: #eee;
+}
+
+
+/* ================================
+   Task Card Buttons
    ================================ */
 
 .task-card button {
@@ -194,14 +219,128 @@ body {
   outline-offset: 2px;
 }
 
+
+/* ================================
+   Task Form
+   ================================ */
+
+.task-form-section {
+  margin-top: 30px;
+
+  margin-bottom: 30px;
+
+  padding: 20px;
+
+  background-color: white;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+}
+
+.task-form-section h2 {
+  margin-top: 0;
+}
+
+.task-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+/* ================================
+   Form Inputs
+   ================================ */
+
+.task-form input,
+.task-form textarea {
+  width: 100%;
+
+  padding: 10px;
+
+  font: inherit;
+
+  border: 1px solid #ccc;
+
+  border-radius: 4px;
+}
+
+.task-form textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+
+/* ================================
+   Form Focus States
+   ================================ */
+
+.task-form input:focus,
+.task-form textarea:focus {
+  outline: 2px solid #222;
+
+  outline-offset: 2px;
+
+  border-color: #222;
+}
+
+
+/* ================================
+   Form Button
+   ================================ */
+
+.task-form button {
+  align-self: flex-start;
+
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 4px;
+
+  background-color: #222;
+
+  color: white;
+
+  font: inherit;
+
+  cursor: pointer;
+}
+
+.task-form button:hover {
+  background-color: #444;
+}
+
+.task-form button:focus {
+  outline: 2px solid #222;
+
+  outline-offset: 2px;
+}
+
+
 /* ================================
    Responsive Design
    ================================ */
 
 @media (max-width: 768px) {
+
   .site-header {
     flex-direction: column;
+
     align-items: flex-start;
+
     gap: 15px;
   }
 
@@ -212,4 +351,5 @@ body {
   .content {
     padding: 20px;
   }
+
 }
