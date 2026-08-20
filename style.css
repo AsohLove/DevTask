@@ -49,6 +49,12 @@ body {
   gap: 20px;
 }
 
+.task-status.completed {
+  background-color: #d4edda;
+
+  color: #155724;
+}
+
 .navigation a {
   color: #222;
 
