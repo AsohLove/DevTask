@@ -79,3 +79,20 @@ jobs:
           JWT_EXPIRES_IN: 1h
 
         run: npm test
+        
+  docker:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t devtask-api \
+            ./backend
+    
