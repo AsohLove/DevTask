@@ -1,20 +1,10 @@
 import {
+  getTasks,
   createTask,
-  deleteTask,
-  toggleTask
+  updateTask,
+  deleteTask
 } from "./tasks.js";
 
-
-// ========================================
-// Application State
-// ========================================
-
-let tasks = [];
-
-
-// ========================================
-// DOM Elements
-// ========================================
 
 const taskList =
   document.querySelector(".task-list");
@@ -23,32 +13,14 @@ const taskForm =
   document.querySelector(".task-form");
 
 
-// ========================================
-// Local Storage
-// ========================================
-
-const STORAGE_KEY = "devtask_tasks";
-
-
-function saveTasks() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(tasks)
-  );
-}
-
-
-function loadTasks() {
-  const storedTasks =
-    localStorage.getItem(STORAGE_KEY);
-
-  if (!storedTasks) {
-    return;
-  }
+async function loadTasks() {
 
   try {
 
-    tasks = JSON.parse(storedTasks);
+    const tasks =
+      await getTasks();
+
+    renderTasks(tasks);
 
   } catch (error) {
 
@@ -57,261 +29,176 @@ function loadTasks() {
       error
     );
 
-    tasks = [];
   }
+
 }
 
 
-// ========================================
-// Render Tasks
-// ========================================
-
-function renderTasks() {
+function renderTasks(tasks) {
 
   taskList.innerHTML = "";
 
 
-  // Empty state
+  tasks.forEach(task => {
 
-  if (tasks.length === 0) {
+    const taskCard =
+      document.createElement("article");
 
-    const emptyState =
-      document.createElement("p");
+    taskCard.className =
+      "task-card";
 
-    emptyState.classList.add(
-      "empty-state"
+
+    taskCard.innerHTML = `
+      <span class="task-status ${
+        task.completed
+          ? "completed"
+          : ""
+      }">
+        ${
+          task.completed
+            ? "Completed"
+            : "Pending"
+        }
+      </span>
+
+      <h3>${task.title}</h3>
+
+      <p>
+        ${task.description || ""}
+      </p>
+
+      <button
+        type="button"
+        data-task-id="${task.id}"
+      >
+        ${
+          task.completed
+            ? "Undo"
+            : "Complete"
+        }
+      </button>
+    `;
+
+
+    taskList.appendChild(taskCard);
+
+  });
+
+}
+
+
+async function handleCreateTask(event) {
+
+  event.preventDefault();
+
+
+  const formData =
+    new FormData(taskForm);
+
+
+  const taskData = {
+
+    title:
+      formData.get("title"),
+
+    description:
+      formData.get("description"),
+
+    dueDate:
+      formData.get("dueDate") || undefined
+
+  };
+
+
+  try {
+
+    await createTask(taskData);
+
+    taskForm.reset();
+
+    await loadTasks();
+
+  } catch (error) {
+
+    console.error(
+      "Failed to create task:",
+      error
     );
 
-    emptyState.textContent =
-      "No tasks yet. Create your first task.";
+  }
 
-    taskList.append(emptyState);
+}
 
+
+async function handleTaskClick(event) {
+
+  const button =
+    event.target.closest(
+      "[data-task-id]"
+    );
+
+
+  if (!button) {
     return;
   }
 
 
-  // Render every task
-
-  tasks.forEach(task => {
-
-    const article =
-      document.createElement("article");
-
-    article.classList.add("task-card");
-
-    article.dataset.taskId = task.id;
+  const taskId =
+    button.dataset.taskId;
 
 
-    if (task.completed) {
+  const isCompleted =
+    button.textContent.trim()
+      === "Undo";
 
-      article.classList.add("completed");
+
+  try {
+
+    if (isCompleted) {
+
+      await updateTask(
+        taskId,
+        {
+          completed: false
+        }
+      );
+
+    } else {
+
+      await updateTask(
+        taskId,
+        {
+          completed: true
+        }
+      );
 
     }
 
 
-    const status =
-      document.createElement("span");
+    await loadTasks();
 
-    status.classList.add("task-status");
+  } catch (error) {
 
-    if (task.completed) {
-
-      status.classList.add("completed");
-
-    }
-
-    status.textContent =
-      task.completed
-        ? "Completed"
-        : "Pending";
-
-
-    const title =
-      document.createElement("h3");
-
-    title.textContent = task.title;
-
-
-    const description =
-      document.createElement("p");
-
-    description.textContent =
-      task.description ||
-      "No description provided.";
-
-
-    const completeButton =
-      document.createElement("button");
-
-    completeButton.type = "button";
-
-    completeButton.classList.add(
-      "complete-button"
+    console.error(
+      "Failed to update task:",
+      error
     );
 
-    completeButton.textContent =
-      task.completed
-        ? "Undo"
-        : "Complete";
+  }
 
-
-    const deleteButton =
-      document.createElement("button");
-
-    deleteButton.type = "button";
-
-    deleteButton.classList.add(
-      "delete-button"
-    );
-
-    deleteButton.textContent =
-      "Delete";
-
-
-    article.append(
-      status,
-      title,
-      description,
-      completeButton,
-      deleteButton
-    );
-
-
-    taskList.append(article);
-
-  });
 }
 
 
-// ========================================
-// Create Task
-// ========================================
-
 taskForm.addEventListener(
   "submit",
-  event => {
-
-    event.preventDefault();
-
-
-    const formData =
-      new FormData(taskForm);
-
-
-    const title =
-      formData.get("title").trim();
-
-    const description =
-      formData.get("description").trim();
-
-    const dueDate =
-      formData.get("dueDate");
-
-
-    const task =
-      createTask(
-        title,
-        description,
-        dueDate
-      );
-
-
-    tasks.push(task);
-
-
-    saveTasks();
-
-    renderTasks();
-
-    taskForm.reset();
-
-  }
+  handleCreateTask
 );
 
-
-// ========================================
-// Task Actions
-// ========================================
 
 taskList.addEventListener(
   "click",
-  event => {
-
-    const button =
-      event.target.closest("button");
-
-
-    if (!button) {
-      return;
-    }
-
-
-    const taskCard =
-      button.closest(".task-card");
-
-
-    if (!taskCard) {
-      return;
-    }
-
-
-    const taskId =
-      taskCard.dataset.taskId;
-
-
-    // Complete / Undo
-
-    if (
-      button.classList.contains(
-        "complete-button"
-      )
-    ) {
-
-      tasks =
-        toggleTask(
-          tasks,
-          taskId
-        );
-
-
-      saveTasks();
-
-      renderTasks();
-
-      return;
-    }
-
-
-    // Delete
-
-    if (
-      button.classList.contains(
-        "delete-button"
-      )
-    ) {
-
-      tasks =
-        deleteTask(
-          tasks,
-          taskId
-        );
-
-
-      saveTasks();
-
-      renderTasks();
-
-    }
-
-  }
+  handleTaskClick
 );
 
 
-// ========================================
-// Application Initialization
-// ========================================
-
 loadTasks();
-
-renderTasks();

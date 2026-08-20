@@ -1,77 +1,116 @@
-/**
- * Create a new task.
- */
-export function createTask(
-  title,
-  description = "",
-  dueDate = ""
-) {
-  return {
-    id: crypto.randomUUID(),
+const API_URL = "http://localhost:3000/api/tasks";
 
-    title,
 
-    description,
+export async function getTasks() {
 
-    dueDate,
+  const response = await fetch(API_URL);
 
-    completed: false,
 
-    createdAt: new Date().toISOString()
-  };
+  if (!response.ok) {
+
+    throw new Error(
+      "Failed to fetch tasks"
+    );
+
+  }
+
+
+  return response.json();
+
 }
 
 
-/**
- * Delete a task.
- *
- * Returns a new array without the
- * specified task.
- */
-export function deleteTask(tasks, taskId) {
-  return tasks.filter(
-    task => task.id !== taskId
-  );
-}
+export async function createTask(taskData) {
 
+  const response = await fetch(
+    API_URL,
+    {
+      method: "POST",
 
-/**
- * Toggle the completion state of a task.
- *
- * Pending -> Completed
- * Completed -> Pending
- */
-export function toggleTask(tasks, taskId) {
-  return tasks.map(task => {
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-    if (task.id !== taskId) {
-      return task;
+      body: JSON.stringify(taskData)
     }
+  );
 
-    return {
-      ...task,
 
-      completed: !task.completed
-    };
-  });
+  if (!response.ok) {
+
+    const error =
+      await response.json();
+
+    throw new Error(
+      error.error ||
+      "Failed to create task"
+    );
+
+  }
+
+
+  return response.json();
+
 }
 
 
-/**
- * Return only active tasks.
- */
-export function getActiveTasks(tasks) {
-  return tasks.filter(
-    task => !task.completed
+export async function updateTask(
+  id,
+  updates
+) {
+
+  const response = await fetch(
+    `${API_URL}/${id}`,
+    {
+      method: "PATCH",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify(updates)
+    }
   );
+
+
+  if (!response.ok) {
+
+    const error =
+      await response.json();
+
+    throw new Error(
+      error.error ||
+      "Failed to update task"
+    );
+
+  }
+
+
+  return response.json();
+
 }
 
 
-/**
- * Return only completed tasks.
- */
-export function getCompletedTasks(tasks) {
-  return tasks.filter(
-    task => task.completed
+export async function deleteTask(id) {
+
+  const response = await fetch(
+    `${API_URL}/${id}`,
+    {
+      method: "DELETE"
+    }
   );
+
+
+  if (!response.ok) {
+
+    const error =
+      await response.json();
+
+    throw new Error(
+      error.error ||
+      "Failed to delete task"
+    );
+
+  }
+
 }
