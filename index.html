@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
 
   <!-- ================================
@@ -62,7 +61,6 @@
 
     <main class="content">
 
-
       <!-- ================================
            Active Tasks
            ================================ -->
@@ -80,73 +78,12 @@
         </header>
 
 
-        <div class="task-list">
+        <!--
+          JavaScript will dynamically render
+          task cards inside this container.
+        -->
 
-
-          <!-- Task 1 -->
-
-          <article class="task-card">
-
-            <span class="task-status">
-              Pending
-            </span>
-
-            <h3>Learn HTML</h3>
-
-            <p>
-              Understand semantic HTML and accessibility.
-            </p>
-
-            <button type="button">
-              Complete
-            </button>
-
-          </article>
-
-
-          <!-- Task 2 -->
-
-          <article class="task-card">
-
-            <span class="task-status">
-              Pending
-            </span>
-
-            <h3>Learn CSS</h3>
-
-            <p>
-              Understand CSS layout and styling.
-            </p>
-
-            <button type="button">
-              Complete
-            </button>
-
-          </article>
-
-
-          <!-- Task 3 -->
-
-          <article class="task-card">
-
-            <span class="task-status">
-              Pending
-            </span>
-
-            <h3>Learn JavaScript</h3>
-
-            <p>
-              Understand JavaScript fundamentals.
-            </p>
-
-            <button type="button">
-              Complete
-            </button>
-
-          </article>
-
-
-        </div>
+        <div class="task-list"></div>
 
       </section>
 
@@ -160,7 +97,6 @@
         <h2>Create a Task</h2>
 
         <form class="task-form">
-
 
           <!-- Task Title -->
 
@@ -226,12 +162,19 @@
 
       </section>
 
-
     </main>
 
   </div>
 
-  <script src="script.js"></script>
+
+  <!-- ================================
+       JavaScript
+       ================================ -->
+
+  <script
+    type="module"
+    src="./js/script.js"
+  ></script>
 
 </body>
 
