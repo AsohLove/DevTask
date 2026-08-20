@@ -1,8 +1,10 @@
 import express from "express";
 
-import { createTaskSchema } from "../validators/task.validator.js";
+import { createTaskSchema, updateTaskSchema } from "../validators/task.validator.js";
 
-import { validate } from "../middleware/validate.middleware.js";
+import { idSchema } from "../validators/id.validator.js";
+
+import { validate, validateParams } from "../middleware/validate.middleware.js";
 
 import {
   getTasks,
@@ -24,6 +26,7 @@ router.get(
 
 router.get(
   "/:id",
+  validateParams(idSchema),
   getTask
 );
 
@@ -37,11 +40,14 @@ router.post(
 
 router.patch(
   "/:id",
+  validateParams(idSchema),
+  validate(updateTaskSchema),
   updateTask
 );
 
 router.delete(
   "/:id",
+  validateParams(idSchema),
   removeTask
 );
 

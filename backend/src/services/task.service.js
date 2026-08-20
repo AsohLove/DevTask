@@ -6,10 +6,13 @@ import {
   updateTask
 } from "../repositories/task.repository.js";
 
+import { mapTask } from "../mappers/task.mapper.js";
 
 export async function getAllTasks() {
 
-  return findAllTasks();
+  const tasks = await findAllTasks();
+
+  return tasks.map(mapTask);
 
 }
 
@@ -27,7 +30,7 @@ export async function getTaskById(id) {
     throw error;
   }
 
-  return task;
+  return mapTask(task);
 
 }
 
@@ -59,7 +62,7 @@ export async function updateExistingTask(
   }
 
 
-  return task;
+  return mapTask(task);
 }
 
 export async function deleteExistingTask(id) {

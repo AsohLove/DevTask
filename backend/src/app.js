@@ -1,9 +1,13 @@
 import express from "express";
 
+import cors from "cors"
+
 import taskRoutes from "./routes/task.routes.js"
 import { errorHandler } from "./middleware/error.middleware.js";
 
 const app = express();
+
+app.use(cors())
 
 
 // ========================================
@@ -27,18 +31,8 @@ app.get("/health", (request, response) => {
 });
 
 
-app.get("/api/tasks", taskRoutes);
+app.use("/api/tasks", taskRoutes);
 
-app.post("/api/tasks", (request, response) => {
-
-  const task = request.body;
-
-  response.status(201).json({
-    message: "Task created",
-    task
-  });
-
-});
 
 app.use(errorHandler)
 
