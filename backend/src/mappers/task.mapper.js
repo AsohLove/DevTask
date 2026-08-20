@@ -14,6 +14,9 @@ export function mapTask(task) {
     completed:
       task.completed,
 
+    priority: 
+      task.priority,
+
     createdAt:
       task.created_at,
 
