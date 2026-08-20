@@ -1,0 +1,56 @@
+services:
+
+  api:
+    build:
+      context: ./backend
+
+    container_name: devtask-api
+
+    ports:
+      - "3001:3000"
+
+    environment:
+      NODE_ENV: production
+
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: devtask
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      JWT_SECRET: a-jwt-this-secret
+      JWT_EXPIRES_IN: 1h
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  db:
+    image: postgres:17-alpine
+
+    container_name: devtask-db
+
+    environment:
+      POSTGRES_DB: devtask
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d devtask"
+        ]
+
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+volumes:
+
+  postgres_data:
